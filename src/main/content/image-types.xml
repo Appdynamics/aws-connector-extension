@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<image-types>
+
+	<image-type>
+		<name>AMI</name>
+		<description>Amazon Machine Image</description>
+		
+		<property-definitions>
+			<property-definition>
+				<name>AMI ID</name>
+				<description>AMI ID</description>
+				<required>true</required>
+				<type>STRING</type>
+				<default-string-value></default-string-value>
+				<string-max-length>15</string-max-length>
+				<allowed-string-values></allowed-string-values>
+				<default-file-value></default-file-value>
+			</property-definition>
+			<property-definition>
+				<name>Region</name>
+				<description>Region of the image</description>
+				<required>true</required>
+				<type>STRING</type>
+				<default-string-value>us-east-1</default-string-value>
+				<string-max-length>15</string-max-length>
+				<allowed-string-values>ap-southeast-1,eu-west-1,us-east-1,us-west-1</allowed-string-values>
+				<default-file-value></default-file-value>
+			</property-definition>
+		</property-definitions>
+		
+		<supported-compute-center-types>
+			<compute-center-type>Amazon EC2</compute-center-type>
+		</supported-compute-center-types>
+	</image-type>
+	
+</image-types>

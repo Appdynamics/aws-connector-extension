@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<image-repository-types>
+
+	<image-repository-type>
+		<name>Amazon S3</name>
+		<description>Amazon Simple Storage Service</description>
+        <connector-impl-class-name>
+            com.singularity.ee.connectors.aws.AWSConnector
+        </connector-impl-class-name>
+		
+		<property-definitions>
+			<property-definition>
+				<name>AWS Account ID</name>
+				<description>AWS Account ID</description>
+				<required>true</required>
+				<type>STRING</type>
+				<default-string-value></default-string-value>
+				<string-max-length>80</string-max-length>
+				<allowed-string-values></allowed-string-values>
+				<default-file-value></default-file-value>
+			</property-definition>
+			<property-definition>
+				<name>Access Key</name>
+				<description>Access Key</description>
+				<required>true</required>
+				<type>STRING</type>
+				<default-string-value></default-string-value>
+				<string-max-length>80</string-max-length>
+				<allowed-string-values></allowed-string-values>
+				<default-file-value></default-file-value>
+			</property-definition>
+			<property-definition>
+				<name>Secret Access Key</name>
+				<description>Secret Access Key</description>
+				<required>true</required>
+				<type>STRING</type>
+				<default-string-value></default-string-value>
+				<string-max-length>80</string-max-length>
+				<allowed-string-values></allowed-string-values>
+				<default-file-value></default-file-value>
+			</property-definition>
+		</property-definitions>
+		
+		<image-creation-property-definitions>
+			<property-definition>
+				<name>Amazon S3 Bucket</name>
+				<description>S3 bucket</description>
+				<required>true</required>
+				<type>STRING</type>
+				<default-string-value></default-string-value>
+				<string-max-length>80</string-max-length>
+				<allowed-string-values></allowed-string-values>
+				<default-file-value></default-file-value>
+			</property-definition>
+			<property-definition>
+				<name>Manifest Prefix</name>
+				<description>Prefix for the image manifest file</description>
+				<required>true</required>
+				<type>STRING</type>
+				<default-string-value></default-string-value>
+				<string-max-length>80</string-max-length>
+				<allowed-string-values></allowed-string-values>
+				<default-file-value></default-file-value>
+			</property-definition>
+		</image-creation-property-definitions>
+		
+	</image-repository-type>
+	
+</image-repository-types>

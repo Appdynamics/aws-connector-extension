@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<compute-center-types>
+	<compute-center-type>
+		<name>Amazon EC2</name>
+		<description>Amazon Elastic Computing Cloud</description>
+		<connector-impl-class-name>
+			com.singularity.ee.connectors.aws.AWSConnector
+		</connector-impl-class-name>
+		<property-definitions>
+			<property-definition>
+				<name>AWS Account ID</name>
+				<description>AWS Account ID</description>
+				<required>true</required>
+				<type>STRING</type>
+				<default-string-value></default-string-value>
+				<string-max-length>80</string-max-length>
+				<allowed-string-values></allowed-string-values>
+				<default-file-value></default-file-value>
+			</property-definition>
+			<property-definition>
+				<name>Access Key</name>
+				<description>Access Key</description>
+				<required>true</required>
+				<type>STRING</type>
+				<default-string-value></default-string-value>
+				<string-max-length>80</string-max-length>
+				<allowed-string-values></allowed-string-values>
+				<default-file-value></default-file-value>
+			</property-definition>
+			<property-definition>
+				<name>Secret Access Key</name>
+				<description>Secret Access Key</description>
+				<required>true</required>
+				<type>STRING</type>
+				<default-string-value></default-string-value>
+				<string-max-length>80</string-max-length>
+				<allowed-string-values></allowed-string-values>
+				<default-file-value></default-file-value>
+			</property-definition>
+		</property-definitions>
+		<machine-descriptor-definitions>
+			<property-definition>
+				<name>Instance Type</name>
+				<description>Machine Instance Type</description>
+				<required>false</required>
+				<type>STRING</type>
+				<default-string-value>m1.small</default-string-value>
+				<string-max-length>15</string-max-length>
+				<allowed-string-values>
+					m1.small,m1.large,m1.xlarge,c1.medium,c1.xlarge
+				</allowed-string-values>
+				<default-file-value></default-file-value>
+			</property-definition>
+			<property-definition>
+				<name>Availability Zone</name>
+				<description>Availability Zone</description>
+				<required>false</required>
+				<type>STRING</type>
+				<default-string-value></default-string-value>
+				<string-max-length>15</string-max-length>
+				<allowed-string-values></allowed-string-values>
+				<default-file-value></default-file-value>
+			</property-definition>
+			<property-definition>
+				<name>Security Group</name>
+				<description>Comma separated list of security group names to assign to the machine instance</description>
+				<required>false</required>
+				<type>STRING</type>
+				<default-string-value></default-string-value>
+				<string-max-length>80</string-max-length>
+				<allowed-string-values></allowed-string-values>
+				<default-file-value></default-file-value>
+			</property-definition>
+			<property-definition>
+				<name>Key Pair</name>
+				<description>Key Pair</description>
+				<required>false</required>
+				<type>STRING</type>
+				<default-string-value></default-string-value>
+				<string-max-length>50</string-max-length>
+				<allowed-string-values></allowed-string-values>
+				<default-file-value></default-file-value>
+			</property-definition>
+			<property-definition>
+				<name>Elastic IP</name>
+				<description>Elastic IP address to associate with the machine on EC2</description>
+				<required>false</required>
+				<type>STRING</type>
+				<default-string-value></default-string-value>
+				<string-max-length>100</string-max-length>
+				<allowed-string-values></allowed-string-values>
+				<default-file-value></default-file-value>
+			</property-definition>
+			<property-definition>
+				<name>Kernel</name>
+				<description>Kernel</description>
+				<required>false</required>
+				<type>STRING</type>
+				<default-string-value></default-string-value>
+				<string-max-length>15</string-max-length>
+				<allowed-string-values></allowed-string-values>
+				<default-file-value></default-file-value>
+			</property-definition>
+		</machine-descriptor-definitions>
+	</compute-center-type>
+</compute-center-types>
