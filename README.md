@@ -1,4 +1,4 @@
-aws-ec2-connector-extension
+aws-connector-extension
 ===========================
 
-Amazon Web Services Elastic Compute Cloud (EC2) Connector Extension
+Amazon Web Services EC2 Connector Extension
