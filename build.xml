@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="aws.connector" default="build">
 	<property name="src" location="src/main/java" />
-    	<property name="content" location="src/main/content" />
+    <property name="content" location="src/main/content" />
 	<property name="build" location="build" />
 	<property name="dist" location="dist" />
 	<property name="jarName" location="connector.jar" />
