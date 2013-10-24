@@ -41,6 +41,13 @@ Amazon Web Services EC2 Connector Extension
 6. Go to the controller dashboard on the browser. Under Setup->My Preferences->Advanced Features enable "Show Cloud Auto-Scaling features" if it is not enabled. 
 7. On the controller dashboard click "Cloud Auto-Scaling" and configure the compute cloud and the image.
 
+Click Compute Cloud->Register Compute Cloud. Refer to the image below
+
+![alt tag](https://raw.github.com/Appdynamics/https://raw.github.com/Appdynamics/aws-connector-extension/master/Amazon%20Elastic%20Computing%20Cloud%20Fields.png?login=rvasanda&token=6b927599ef85c6498274b0bef89d546f)
+
+Click Image->Register Image. Refer to the image below
+
+![alt tag](https://raw.github.com/Appdynamics/aws-connector-extension/master/AMI.png?login=rvasanda&token=b8c95758939efd0f22fbcd23537669c5)
 
 ##Contributing
 
