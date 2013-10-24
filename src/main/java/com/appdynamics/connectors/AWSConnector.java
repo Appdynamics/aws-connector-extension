@@ -1,4 +1,4 @@
-package com.singularity.ee.connectors.aws;
+package com.appdynamics.connectors;
 
 import static com.singularity.ee.connectors.entity.api.MachineState.STARTED;
 import static com.singularity.ee.connectors.entity.api.MachineState.STARTING;

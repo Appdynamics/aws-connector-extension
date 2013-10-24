@@ -1,4 +1,4 @@
-package com.singularity.ee.connectors.aws;
+package com.appdynamics.connectors;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -5,7 +5,7 @@
 		<name>Amazon S3</name>
 		<description>Amazon Simple Storage Service</description>
         <connector-impl-class-name>
-            com.singularity.ee.connectors.aws.AWSConnector
+            com.appdynamics.connectors.AWSConnector
         </connector-impl-class-name>
 		
 		<property-definitions>
