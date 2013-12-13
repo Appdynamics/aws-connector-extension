@@ -54,11 +54,11 @@ Lastly, the aws-connector-extension may be used to stage migration of an applica
 
 Click Compute Cloud->Register Compute Cloud. Refer to the image below
 
-![alt tag](https://raw.github.com/Appdynamics/aws-connector-extension/master/Amazon%20Elastic%20Computing%20Cloud%20Fields.png?login=rvasanda&token=6b927599ef85c6498274b0bef89d546f)
+![alt tag](https://raw.github.com/Appdynamics/aws-connector-extension/master/Amazon%20Elastic%20Computing%20Cloud%20Fields.png)
 
 Click Image->Register Image. Refer to the image below
 
-![alt tag](https://raw.github.com/Appdynamics/aws-connector-extension/master/AMI.png?login=rvasanda&token=b8c95758939efd0f22fbcd23537669c5)
+![alt tag](https://raw.github.com/Appdynamics/aws-connector-extension/master/AMI.png)
 
 ##Contributing
 
