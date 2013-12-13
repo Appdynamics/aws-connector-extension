@@ -16,7 +16,7 @@ Third, if the Controller detects that a machine instance has terminated unexpect
 Lastly, the aws-connector-extension may be used to stage migration of an application from a physical to virtual infrastructure. Or the aws-connector-extension may be used to add additional virtual capacity to an application to augment a preexisting physical infrastructure hosting the application. 
 
 
-##Installation##Installation
+##Installation
 <ol>
 
 <li>Clone the aws-connector-extension from GitHub.
