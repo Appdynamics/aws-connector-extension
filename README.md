@@ -1,4 +1,3 @@
-
 Amazon Web Services EC2 Connector Extension
 ===========================================
 
@@ -65,7 +64,7 @@ Always feel free to fork and contribute any changes directly here on GitHub.
 
 ##Community
 
-Find out more in the [AppSphere] community.
+Find out more in the [AppSphere](http://appsphere.appdynamics.com/t5/eXchange/Amazon-Web-Services-AWS-EC2-Cloud-Connector-Extension/idi-p/5431) community.
 
 ##Support
 
