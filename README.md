@@ -39,7 +39,7 @@ Unzip the downloaded file.
 <li>Click <b>Compute Clouds -&gt; Register Compute Cloud</b>. Fill in the required information (shown in the image below) and then click Register Compute Cloud to save the information.
 <p>
 &nbsp; 
-</p><img src = "https://raw.github.com/Appdynamics/aws-connector-extension/master/Amazon%20Elastic%20Computing%20Cloud%20Fields.png">
+</p><img src = "https://raw.github.com/Appdynamics/aws-connector-extension/master/Amazon%20Elastic%20Compute%20Cloud%20Fields.png">
 </li>
 <p>
 &nbsp; 
