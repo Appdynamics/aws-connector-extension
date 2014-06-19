@@ -15,20 +15,22 @@
  */
 package com.appdynamics.connectors;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.singularity.ee.connectors.api.IControllerServices;
 import com.singularity.ee.connectors.entity.api.IComputeCenter;
 import com.singularity.ee.connectors.entity.api.IImageStore;
 import com.singularity.ee.connectors.entity.api.IProperty;
-import com.xerox.amazonws.ec2.Jec2;
+import java.util.HashMap;
+import java.util.Map;
 
 class ConnectorLocator
 {
 	private static final ConnectorLocator INSTANCE = new ConnectorLocator();
 	
-	private final Map<String, Jec2> accessKeyVsEc2 = new HashMap<String, Jec2>();
+	private final Map<String, AmazonEC2> accessKeyVsEc2 = new HashMap<String, AmazonEC2>();
 	
 	private final Object connectorLock = new Object();
 	
@@ -42,20 +44,22 @@ class ConnectorLocator
 		return INSTANCE;
 	}
 	
-	public Jec2 getConnector(IComputeCenter computeCenter, IControllerServices controllerServices)
+	public AmazonEC2 getConnector(IComputeCenter computeCenter, IControllerServices controllerServices)
 	{
 		return getConnector(computeCenter.getProperties(), controllerServices);
 	}
 
-	public Jec2 getConnector(IImageStore imageStore, IControllerServices controllerServices)
+	public AmazonEC2 getConnector(IImageStore imageStore, IControllerServices controllerServices)
 	{
 		return getConnector(imageStore.getProperties(), controllerServices);
 	}
 	
-	public Jec2 getConnector(IProperty[] properties, IControllerServices controllerServices)
+	public AmazonEC2 getConnector(IProperty[] properties, IControllerServices controllerServices)
 	{
 		String accessKey = Utils.getAccessKey(properties, controllerServices);
 		String secretKey = Utils.getSecretKey(properties, controllerServices);
+
+        AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
 
 		// TODO: FIX CORE-3805
 		// for now return a new instance everytime.
@@ -63,15 +67,15 @@ class ConnectorLocator
 		// containing the same AWS account information issues
 		if(true)
 		{
-			return new Jec2(accessKey, secretKey);
+			return new AmazonEC2Client(awsCredentials);
 		}
 		
 		synchronized (connectorLock)
 		{
-			Jec2 ec2 = accessKeyVsEc2.get(accessKey);
+            AmazonEC2 ec2 = accessKeyVsEc2.get(accessKey);
 			if (ec2 != null)
 				return ec2;
-			ec2 = new Jec2(accessKey, secretKey);
+			ec2 = new AmazonEC2Client(awsCredentials);
 			accessKeyVsEc2.put(accessKey, ec2);
 
 			return ec2;			

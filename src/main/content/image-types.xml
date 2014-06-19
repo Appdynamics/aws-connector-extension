@@ -23,7 +23,7 @@
 				<type>STRING</type>
 				<default-string-value>us-east-1</default-string-value>
 				<string-max-length>15</string-max-length>
-				<allowed-string-values>ap-southeast-1,eu-west-1,us-east-1,us-west-1</allowed-string-values>
+				<allowed-string-values>ap-northeast-1,ap-southeast-1,ap-southeast-2,eu-west-1,sa-east-1,us-east-1,us-west-1,us-west-2</allowed-string-values>
 				<default-file-value></default-file-value>
 			</property-definition>
 		</property-definitions>
