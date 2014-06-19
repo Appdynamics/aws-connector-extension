@@ -2,7 +2,7 @@
 <compute-center-types>
 	<compute-center-type>
 		<name>Amazon EC2</name>
-		<description>Amazon Elastic Computing Cloud</description>
+		<description>Amazon Elastic Compute Cloud</description>
 		<connector-impl-class-name>
             com.appdynamics.connectors.AWSConnector
         </connector-impl-class-name>
