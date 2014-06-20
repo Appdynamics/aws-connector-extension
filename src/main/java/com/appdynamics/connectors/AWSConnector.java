@@ -21,6 +21,7 @@ import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.AssociateAddressRequest;
 import com.amazonaws.services.ec2.model.AuthorizeSecurityGroupIngressRequest;
 import com.amazonaws.services.ec2.model.AvailabilityZone;
+import com.amazonaws.services.ec2.model.CreateTagsRequest;
 import com.amazonaws.services.ec2.model.DeregisterImageRequest;
 import com.amazonaws.services.ec2.model.DescribeAvailabilityZonesResult;
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
@@ -35,6 +36,7 @@ import com.amazonaws.services.ec2.model.RebootInstancesRequest;
 import com.amazonaws.services.ec2.model.Reservation;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.SecurityGroup;
+import com.amazonaws.services.ec2.model.Tag;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.amazonaws.util.Base64;
 import com.google.common.base.Strings;
@@ -148,7 +150,9 @@ public class AWSConnector implements IConnector {
 
             String userData = agentResolutionEncoder.encodeAgentResolutionInfo();
 
-            logger.info("Starting EC2 machine of Image :" + amiName + " security :" + securityGroups + " keypair :"
+            String instanceName = Utils.getInstanceName(macProps, controllerServices);
+
+            logger.info("Starting EC2 machine of Image :" + amiName + " Name :"+ instanceName +" security :" + securityGroups + " keypair :"
                     + keyPair + " instance :" + instanceType + " zone :" + zone + " kernel :" + kernel + " ramdisk :"
                     + ramdisk + " userData :" + userData);
 
@@ -167,6 +171,15 @@ public class AWSConnector implements IConnector {
                 throw new ConnectorException("Cannot create instance for image :" + image.getName());
 
             instance = instances.get(0);
+
+            
+            //Set name for the instance
+            if (!Strings.isNullOrEmpty(instanceName)) {
+                CreateTagsRequest createTagsRequest = new CreateTagsRequest();
+                createTagsRequest.withResources(instance.getInstanceId()).withTags(new Tag("Name", instanceName));
+                connector.createTags(createTagsRequest);
+            }
+
 
             logger.info("EC2 machine started; id:" + instance.getInstanceId());
 
@@ -436,28 +449,15 @@ public class AWSConnector implements IConnector {
     }
 
     private InstanceType getInstanceType(IProperty[] macProps) {
-        String instanceType = Utils.getInstanceType(macProps, controllerServices);
+        String instanceTypeString = Utils.getInstanceType(macProps, controllerServices);
 
-        // MUST be m1.small, m1.large, m1.xlarge, c1.medium, and c1.xlarge.
-        if (instanceType == null)
-            return InstanceType.M1Small;
-
-        if (instanceType.endsWith("m1.small"))
-            return InstanceType.M1Small;
-
-        if (instanceType.endsWith("m1.large"))
-            return InstanceType.M1Large;
-
-        if (instanceType.endsWith("m1.xlarge"))
-            return InstanceType.M1Xlarge;
-
-        if (instanceType.endsWith("c1.medium"))
-            return InstanceType.C1Medium;
-
-        if (instanceType.endsWith("c1.xlarge"))
-            return InstanceType.C1Xlarge;
-
-        return InstanceType.M1Small;
+        InstanceType instanceType = InstanceType.M1Small;
+        try {
+            instanceType = InstanceType.fromValue(instanceTypeString);
+        } catch (IllegalArgumentException e) { //Should never occur
+            logger.log(Level.INFO, "Invalid instance type. Using m1.small", e);
+        }
+        return instanceType;
     }
 
     private Instance getEc2Instance(IMachine machine, AmazonEC2 connector) throws ConnectorException {

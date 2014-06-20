@@ -40,6 +40,8 @@ class Utils
 
 	public static final String KEY_PAIR = "Key Pair";
 
+    public static final String INSTANCE_NAME = "Instance Name";
+
 	public static final String INSTANCE_TYPE = "Instance Type";
 
 	public static final String KERNEL = "Kernel";
@@ -123,6 +125,11 @@ class Utils
 	{
 		return getValue(controllerServices.getStringPropertyValueByName(properties, SECURITY_GROUP));
 	}
+
+    public static String getInstanceName(IProperty[] properties, IControllerServices controllerServices)
+    {
+        return controllerServices.getStringPropertyValueByName(properties, INSTANCE_NAME);
+    }
 	
 	public static String getInstanceType(IProperty[] properties, IControllerServices controllerServices)
 	{
