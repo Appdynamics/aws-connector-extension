@@ -51,6 +51,15 @@ Unzip the downloaded file.
 <img src = "https://raw.github.com/Appdynamics/aws-connector-extension/master/AMI.png">
 
 </li>
+<li>Select an Image from the list and click on <b>Launch Instance</b>. Fill in the details and then click on <b>Launch Instance</b> button to launch the instance.
+Make sure you have selected appropriate <b>Instance Type</b> for the <b>AMI</b> specified in the <b>Image</b>.
+For the list of Instance Type and AMI matrix goto [Amazon Linux AMI Instance Type Matrix](http://aws.amazon.com/amazon-linux-ami/instance-type-matrix/)
+<p>
+&nbsp; 
+</p>
+<img src = "https://raw.github.com/Appdynamics/aws-connector-extension/master/Instance.png">
+
+</li>
 </ul>
 
 </ol>
