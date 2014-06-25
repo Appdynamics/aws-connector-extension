@@ -21,10 +21,10 @@ Lastly, the aws-connector-extension may be used to stage migration of an applica
 <li>Clone the aws-connector-extension from GitHub.
 </li>
 <li>
-Run 'ant package' from the cloned aws-connector-extension directory.
+Run 'mvn clean install' from the cloned aws-connector-extension directory.
 </li>
 <li>
-Download the file aws-connector.zip located in the 'dist' directory into the &lt;controller install the dir&gt;/lib/connectors directory.
+Download the file aws-connector.zip located in the 'target' directory into the &lt;controller install the dir&gt;/lib/connectors directory.
 </li>
 <li>
 Unzip the downloaded file.
