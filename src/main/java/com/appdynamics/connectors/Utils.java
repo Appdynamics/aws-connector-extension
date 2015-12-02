@@ -38,6 +38,10 @@ class Utils
 
 	public static final String SECURITY_GROUP = "Security Group";
 
+	public static final String SECURITY_GROUP_ID = "Security Group ID";
+
+	public static final String SUBNET_ID = "Subnet ID";
+
 	public static final String KEY_PAIR = "Key Pair";
 
     public static final String INSTANCE_NAME = "Instance Name";
@@ -124,6 +128,16 @@ class Utils
 	public static String getSecurityGroup(IProperty[] properties, IControllerServices controllerServices)
 	{
 		return getValue(controllerServices.getStringPropertyValueByName(properties, SECURITY_GROUP));
+	}
+
+	public static String getSecurityGroupID(IProperty[] properties, IControllerServices controllerServices)
+	{
+		return getValue(controllerServices.getStringPropertyValueByName(properties, SECURITY_GROUP_ID));
+	}
+
+	public static String getSubnetID(IProperty[] properties, IControllerServices controllerServices)
+	{
+		return getValue(controllerServices.getStringPropertyValueByName(properties, SUBNET_ID));
 	}
 
     public static String getInstanceName(IProperty[] properties, IControllerServices controllerServices)

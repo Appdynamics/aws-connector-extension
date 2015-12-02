@@ -20,7 +20,7 @@
 
     <groupId>com.appdynamics.cloud.connectors</groupId>
     <artifactId>aws-connector-extension</artifactId>
-    <version>1.0.0</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
     <name>aws-connector-extension</name>
     <url>http://maven.apache.org</url>
@@ -130,7 +130,7 @@
                                 <copy todir="${target.dir}">
                                     <fileset dir="${build.directory}" includes="connector.${project.packaging}"/>
                                 </copy>
-                                <zip destfile="${target.dir}.zip">
+                                <zip destfile="${target.dir}-${project.version}.zip">
                                     <zipfileset dir="${target.dir}" filemode="755" prefix="aws/"/>
                                 </zip>
                                 <delete dir="${target.dir}"/>

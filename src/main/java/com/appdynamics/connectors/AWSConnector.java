@@ -1,12 +1,12 @@
 /**
  * Copyright 2013 AppDynamics, Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,6 +14,14 @@
  * limitations under the License.
  */
 package com.appdynamics.connectors;
+
+import static com.singularity.ee.connectors.entity.api.MachineState.STARTED;
+import static com.singularity.ee.connectors.entity.api.MachineState.STARTING;
+import static com.singularity.ee.connectors.entity.api.MachineState.STOPPED;
+import static com.singularity.ee.connectors.entity.api.MachineState.STOPPING;
+import static com.singularity.ee.controller.KAppServerConstants.CONTROLLER_SERVICES_HOST_NAME_PROPERTY_KEY;
+import static com.singularity.ee.controller.KAppServerConstants.CONTROLLER_SERVICES_PORT_PROPERTY_KEY;
+import static com.singularity.ee.controller.KAppServerConstants.DEFAULT_CONTROLLER_PORT_VALUE;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -54,6 +62,7 @@ import com.singularity.ee.connectors.entity.api.IMachine;
 import com.singularity.ee.connectors.entity.api.IMachineDescriptor;
 import com.singularity.ee.connectors.entity.api.IProperty;
 import com.singularity.ee.connectors.entity.api.MachineState;
+
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,14 +72,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static com.singularity.ee.connectors.entity.api.MachineState.STARTED;
-import static com.singularity.ee.connectors.entity.api.MachineState.STARTING;
-import static com.singularity.ee.connectors.entity.api.MachineState.STOPPED;
-import static com.singularity.ee.connectors.entity.api.MachineState.STOPPING;
-import static com.singularity.ee.controller.KAppServerConstants.CONTROLLER_SERVICES_HOST_NAME_PROPERTY_KEY;
-import static com.singularity.ee.controller.KAppServerConstants.CONTROLLER_SERVICES_PORT_PROPERTY_KEY;
-import static com.singularity.ee.controller.KAppServerConstants.DEFAULT_CONTROLLER_PORT_VALUE;
 
 public class AWSConnector implements IConnector {
     private static Logger logger = Logger.getLogger(AWSConnector.class.getName());
@@ -119,8 +120,21 @@ public class AWSConnector implements IConnector {
 
             AmazonEC2 connector = getConnector(image, computeCenter, controllerServices);
             String amiName = Utils.getAMIName(image.getProperties(), controllerServices);
+
+            List<String> securityGroupIds = getSecurityGroupIDs(macProps);
+
+
             List<String> securityGroups = getSecurityGroup(macProps);
-            validateAndConfigureSecurityGroups(securityGroups, connector);
+
+
+            if (securityGroupIds != null && securityGroupIds.size() > 0) {
+                validateAndConfigureSecurityGroups(securityGroupIds, connector, false);
+            } else if (securityGroups != null && securityGroups.size() > 0) {
+                validateAndConfigureSecurityGroups(securityGroups, connector, true);
+            }
+
+
+            String subnetID = Utils.getSubnetID(macProps, controllerServices);
 
             controllerServices.getStringPropertyByName(macProps, Utils.SECURITY_GROUP).
                     setValue(getSecurityGroupsAsString(securityGroups));
@@ -152,12 +166,21 @@ public class AWSConnector implements IConnector {
 
             String instanceName = Utils.getInstanceName(macProps, controllerServices);
 
-            logger.info("Starting EC2 machine of Image :" + amiName + " Name :"+ instanceName +" security :" + securityGroups + " keypair :"
+            logger.info("Starting EC2 machine of Image :" + amiName + " Name :" + instanceName + " security group:" + securityGroups + " security group IDs: " + securityGroupIds
+                    + " Subnet Id: " + subnetID + " keypair :"
                     + keyPair + " instance :" + instanceType + " zone :" + zone + " kernel :" + kernel + " ramdisk :"
                     + ramdisk + " userData :" + userData);
 
             RunInstancesRequest runInstancesRequest = new RunInstancesRequest(amiName, 1, 1);
-            runInstancesRequest.setSecurityGroups(securityGroups);
+
+            if (securityGroupIds != null && securityGroupIds.size() > 0) {
+                runInstancesRequest.withSecurityGroupIds(securityGroupIds);
+                if (subnetID != null) {
+                    runInstancesRequest.withSubnetId(subnetID);
+                }
+            } else if (securityGroups != null && securityGroups.size() > 0) {
+                runInstancesRequest.withSecurityGroups(securityGroups);
+            }
             runInstancesRequest.setUserData(Base64.encodeAsString(userData.getBytes()));
             runInstancesRequest.setKeyName(keyPair);
             runInstancesRequest.setInstanceType(instanceType);
@@ -172,7 +195,7 @@ public class AWSConnector implements IConnector {
 
             instance = instances.get(0);
 
-            
+
             //Set name for the instance
             if (!Strings.isNullOrEmpty(instanceName)) {
                 CreateTagsRequest createTagsRequest = new CreateTagsRequest();
@@ -185,7 +208,14 @@ public class AWSConnector implements IConnector {
 
             IMachine machine;
 
-            if (Strings.isNullOrEmpty(instance.getPublicDnsName())) {
+            String dnsName = instance.getPublicDnsName();
+
+            if (Strings.isNullOrEmpty(dnsName)) {
+                dnsName = instance.getPrivateDnsName();
+            }
+
+
+            if (Strings.isNullOrEmpty(dnsName)) {
                 machine =
                         controllerServices.createMachineInstance(instance.getInstanceId(),
                                 agentResolutionEncoder.getUniqueHostIdentifier(),
@@ -196,7 +226,7 @@ public class AWSConnector implements IConnector {
                 machine =
                         controllerServices.createMachineInstance(instance.getInstanceId(),
                                 agentResolutionEncoder.getUniqueHostIdentifier(),
-                                instance.getPublicDnsName(),
+                                dnsName,
                                 computeCenter,
                                 machineDescriptor,
                                 image, getAgentPort());
@@ -273,7 +303,13 @@ public class AWSConnector implements IConnector {
                     // associate the address
                     setElasticIp(machine, elasticIp, connector);
                 } else {
-                    machine.setIpAddress(ec2Instance.getPublicDnsName());
+
+                    String dnsName = ec2Instance.getPublicDnsName();
+
+                    if (Strings.isNullOrEmpty(dnsName)) {
+                        dnsName = ec2Instance.getPrivateDnsName();
+                    }
+                    machine.setIpAddress(dnsName);
                 }
             }
 
@@ -398,6 +434,21 @@ public class AWSConnector implements IConnector {
         return securityGroups;
     }
 
+    private List<String> getSecurityGroupIDs(IProperty[] macProps) {
+        String propertyValue = Utils.getSecurityGroupID(macProps, controllerServices);
+
+        List<String> securityGroupIds = null;
+        if (!Strings.isNullOrEmpty(propertyValue)) {
+            securityGroupIds = Arrays.asList(propertyValue.split(","));
+        }
+
+        if (securityGroupIds == null) {
+            securityGroupIds = new ArrayList<String>();
+        }
+
+        return securityGroupIds;
+    }
+
     private String getSecurityGroupsAsString(List<String> securityGroups) {
         StringBuilder buffer = new StringBuilder();
 
@@ -411,9 +462,15 @@ public class AWSConnector implements IConnector {
         return buffer.toString();
     }
 
-    private void validateAndConfigureSecurityGroups(List<String> securityGroupNames, AmazonEC2 connector) throws ConnectorException {
+    private void validateAndConfigureSecurityGroups(List<String> securityGroupNamesOrIds, AmazonEC2 connector, boolean withNames) throws ConnectorException {
         DescribeSecurityGroupsRequest describeSecurityGroupsRequest = new DescribeSecurityGroupsRequest();
-        DescribeSecurityGroupsResult describeSecurityGroupsResult = connector.describeSecurityGroups(describeSecurityGroupsRequest.withGroupNames(securityGroupNames));
+        if (withNames) {
+            describeSecurityGroupsRequest.withGroupNames(securityGroupNamesOrIds);
+        } else {
+            describeSecurityGroupsRequest.withGroupIds(securityGroupNamesOrIds);
+        }
+
+        DescribeSecurityGroupsResult describeSecurityGroupsResult = connector.describeSecurityGroups(describeSecurityGroupsRequest);
 
         String controllerIp = "0.0.0.0/0";
         int agentPort = controllerServices.getDefaultAgentPort();
@@ -432,12 +489,17 @@ public class AWSConnector implements IConnector {
             }
         }
 
-        String securityGroup = null;
+        String securityGroupIdOrName = null;
 
-        if (securityGroups.contains(Utils.DEFAULT_SECURITY_GROUP)) {
-            securityGroup = Utils.DEFAULT_SECURITY_GROUP;
+        if (withNames) {
+
+            if (securityGroupNamesOrIds.contains(Utils.DEFAULT_SECURITY_GROUP)) {
+                securityGroupIdOrName = Utils.DEFAULT_SECURITY_GROUP;
+            } else {
+                securityGroupIdOrName = securityGroups.get(0).getGroupName();
+            }
         } else {
-            securityGroup = securityGroups.get(0).getGroupName();
+            securityGroupIdOrName = securityGroups.get(0).getGroupId();
         }
 
         IpPermission ipPermission = new IpPermission();
@@ -445,7 +507,18 @@ public class AWSConnector implements IConnector {
         ipPermission.setToPort(agentPort);
         ipPermission.setIpProtocol("tcp");
         ipPermission.setIpRanges(Lists.newArrayList(controllerIp));
-        connector.authorizeSecurityGroupIngress(new AuthorizeSecurityGroupIngressRequest(securityGroup, Lists.newArrayList(ipPermission)));
+
+        AuthorizeSecurityGroupIngressRequest securityGroupIngressRequest = new AuthorizeSecurityGroupIngressRequest();
+        securityGroupIngressRequest.withIpPermissions(ipPermission);
+
+        if (withNames) {
+            securityGroupIngressRequest.withGroupName(securityGroupIdOrName);
+        } else {
+            securityGroupIngressRequest.withGroupId(securityGroupIdOrName);
+        }
+
+
+        connector.authorizeSecurityGroupIngress(securityGroupIngressRequest);
     }
 
     private InstanceType getInstanceType(IProperty[] macProps) {

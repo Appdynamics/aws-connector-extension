@@ -73,7 +73,27 @@
 			</property-definition>
 			<property-definition>
 				<name>Security Group</name>
-				<description>Comma separated list of security group names to assign to the machine instance</description>
+				<description>Comma separated list of security group names to assign to the machine instance. This will create the instance in default VPC</description>
+				<required>false</required>
+				<type>STRING</type>
+				<default-string-value></default-string-value>
+				<string-max-length>80</string-max-length>
+				<allowed-string-values></allowed-string-values>
+				<default-file-value></default-file-value>
+			</property-definition>
+			<property-definition>
+				<name>Security Group ID</name>
+				<description>Comma separated list of security group ID to assign to the machine instance. This will create the instance in the configured subnet</description>
+				<required>false</required>
+				<type>STRING</type>
+				<default-string-value></default-string-value>
+				<string-max-length>80</string-max-length>
+				<allowed-string-values></allowed-string-values>
+				<default-file-value></default-file-value>
+			</property-definition>
+			<property-definition>
+				<name>Subnet ID</name>
+				<description>Subnet ID in which the instance should be created. You should also provide at least one Security Group ID when using Subnet</description>
 				<required>false</required>
 				<type>STRING</type>
 				<default-string-value></default-string-value>
