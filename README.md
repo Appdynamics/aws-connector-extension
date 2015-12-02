@@ -57,7 +57,13 @@ For the list of Instance Type and AMI matrix goto http://aws.amazon.com/amazon-l
 <p>
 &nbsp; 
 </p>
-<img src = "https://raw.github.com/Appdynamics/aws-connector-extension/master/Instance.png">
+<img src = "https://raw.github.com/Appdynamics/aws-connector-extension/master/Instance.png"> </b>
+
+###Note:
+<ol>
+<li>When proving "Subnet ID" you can not use "Security Group". You should use "Security Group ID".</li>
+<li>"Subnet ID" will be ignored if you dont provide atleast one "Security Group Id".</li>
+</ol>
 
 </li>
 </ul>
