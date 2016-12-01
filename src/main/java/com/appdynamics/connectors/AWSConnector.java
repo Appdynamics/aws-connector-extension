@@ -156,11 +156,10 @@ public class AWSConnector implements IConnector {
             IAccount account = computeCenter.getAccount();
 
             String accountName = account.getName();
-            String accountAccessKey = account.getAccessKey();
 
             AgentResolutionEncoder agentResolutionEncoder =
                     new AgentResolutionEncoder(controllerHost, controllerPort,
-                            accountName, accountAccessKey);
+                            accountName, "");
 
             String userData = agentResolutionEncoder.encodeAgentResolutionInfo();
 
